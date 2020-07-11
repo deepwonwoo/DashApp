@@ -1,0 +1,9 @@
+.LIB SS
+.param
++dVTO_$TR_NAME = $dVTO_SS               dASAT_$TR_NAME = $dASAT_SS
+.ENDL SS
+
+.LIB FF
+.param
++dVTO_$TR_NAME = $dVTO_FF               dASAT_$TR_NAME = $dASAT_FF
+.ENDL FF

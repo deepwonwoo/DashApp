@@ -1,0 +1,27 @@
+$ID-VG spice simulation input file
+
+.option  nomod gmindc=1e-18
+.temp 25
+
+vds d 0  vds
+vgs g 0  vgs
+vss s 0  dc 0
+
+
+$SETTINGS
+
+
+r1 d net 0.0001
+
+*****************LIB ************************************
+$LIB
+*********************************************************
+
+.print i(m1)
+
+$PARAMETERS
+
+$ALTERS
+
+.option Post = 0
+.END

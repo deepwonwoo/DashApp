@@ -1,0 +1,28 @@
+.LIB TT
+.param
++dVTO_$TR = 0                            dASAT_$TR = 1             
+.ENDL TT
+
+.LIB D020
+.MODEL Tr NTFT (
++level    = 36                  VERSION  = 2                    TNOM     = 'IN_TNOM'
++TOX      = 'IN_TOX'            EPSI     = 'IN_EPSI'            EPS      = 13 
++VTO      = 'IN_VTO+dVTO_$TR'   VFB      = '-10+dVTO_$TR'       MU0      = 'IN_MU0'
++WD       = 0                   LD       = 0                    CGDO     = 'IN_CGDO'    
++CGSO     = 'IN_CGSO'           ETA      = 'AI_ETA'             MUS      = 'AI_MUS'        
++VST      = 'AI_VST'            VSI      = 0.1                  AT       = 'AI_AT'          
++BT       = 'AI_BT'             ASAT     = 'AI_ASAT+dASAT_$TR'  DELTA    = 'AI_DELTA'        
++MMU      = 'AI_MMU'            MU1      = 'AI_MU1'             VMAX     = 1e+06        
++ME       = 'AI_ME'             LAMBDA   = 'AI_LAMBDA'          VKINK    = 1           
++LKINK    = 'AI_LKINK'          BLK      = 1e-08                DD       = 'AI_DD'          
++DG       = 'AI_DG'             EB       = 'AI_EB'              I0       = 'AI_I0'         
++I00      = 'AI_I00'            MK       = 'AI_MK'              MSS      = 'AI_MSS'  
++THETA    = 'AI_THETA'          DASAT    = 0.0023299            DVTO     = 0.0116984     
++DMU1     = 0.00080384          VON      = 0                    DVT      = 0  
++RD       = 0                   RS       = 0                    LASAT    = 0  
++CAPMOD   = 0                   ETAC00   = 0                    MC       = 3  
++RDX      = 0                   RSX      = 0                    ZEROC    = 0  
++ISUBMOD  = 0                   INTSDNOD = 0                    SCALERPI = 0  
++TMIN     = 0                   TMAX     = 60                   )
+.ENDL D020
+    

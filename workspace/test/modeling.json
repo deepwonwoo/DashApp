@@ -1,0 +1,28 @@
+{
+    "modeling": [
+        {
+            "job_id": 1,
+            "tft_name": "Tr",
+            "width": 12,
+            "length": 12,
+            "temperature": "D020",
+            "vto": 1,
+            "mu0": 12,
+            "pid": 18064,
+            "running": true,
+            "selected": false
+        },
+        {
+            "job_id": 2,
+            "tft_name": "Dr",
+            "width": 24,
+            "length": 43,
+            "temperature": "D025",
+            "vto": 1,
+            "mu0": 12,
+            "pid": 20812,
+            "running": true,
+            "selected": false
+        }
+    ]
+}

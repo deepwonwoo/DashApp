@@ -1,0 +1,60 @@
+$ID-VG spice simulation input file
+
+.option  nomod gmindc=1e-18
+.temp 25
+
+vds d 0  vds
+vgs g 0  vgs
+vss s 0  dc 0
+
+
+.dc vds 0.0 30.0 0.2
+.param vgs = 10
+.param vds = 0
+m1 net g s Dr, W=24u L=43u
+
+
+r1 d net 0.0001
+
+*****************LIB ************************************
+.lib './workspace/test/2/spice.lib' D025
+*********************************************************
+
+.print i(m1)
+
+$PARAMETERS
+
+
+.ALTER
+.PARAM vgs = 2
+
+.ALTER
+.PARAM vgs = 4
+
+.ALTER
+.PARAM vgs = 6
+
+.ALTER
+.PARAM vgs = 8
+
+.ALTER
+.PARAM vgs = 10
+
+.ALTER
+.PARAM vgs = 12
+
+.ALTER
+.PARAM vgs = 14
+
+.ALTER
+.PARAM vgs = 16
+
+.ALTER
+.PARAM vgs = 18
+
+.ALTER
+.PARAM vgs = 20
+
+
+.option Post = 0
+.END

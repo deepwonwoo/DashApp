@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_table
 import pandas as pd
 from flask import request
+from si_prefix import si_format
 
 
 tft_info_input = html.Div(
@@ -54,7 +55,7 @@ temperature_input = dbc.FormGroup(
             dbc.InputGroup(
                 [
                     dbc.Input(
-                        id="temperature-input", type="number", min=-30, max=100, step=1
+                        id="temperature-input", type="number", min=-100, max=300, step=1
                     ),
                     dbc.InputGroupAddon("\u2103", addon_type="append"),
                 ],
@@ -122,7 +123,6 @@ fixed_parameter_input = dbc.Row(
     ], className="ml-0"
 )
 
-
 modeling_inputs = html.Div(
     [
         dbc.Row(
@@ -135,7 +135,6 @@ modeling_inputs = html.Div(
 
     ]
 )
-
 
 fixed_parameter_input = dbc.Row(
     [
@@ -193,54 +192,69 @@ fixed_parameter_input = dbc.Row(
     ]
 )
 
-tuning_parameter_input = dbc.Row(
-    [
-        dbc.Label("Tuning Parameters:", className="ml-3"),
-        dbc.Col(
-            dcc.Dropdown(
-                options=[{"label": p, "value": p} for p in df_para.iloc[:, 0]],
-                multi=True,
-                value=[p for p in df_para.iloc[:, 0]],
-            ),
-            width=8,
-        ),
-    ],
-    className="mt-3",
-)
 
-tuning_para_table = dbc.Row(
-    [
-        dbc.Col(
-            dash_table.DataTable(
-                columns=[
-                    {"name": c, "id": f"step{s+1}-{c}"} for c in df_para.columns[0:3]
-                ],
-                data=[
-                    {
-                        f"step{s+1}-Parameters": row[0],
-                        f"step{s+1}-Min": to_si(row[1]),
-                        f"step{s+1}-Max": to_si(row[2]),
-                    }
-                    for i, row in df_para.iterrows()
-                    if row[3] == s + 1
-                ],
-                editable=True,
-                style_cell={"minWidth": 45, "maxWidth": 45, "width": 45},
-                style_data_conditional=[
-                    {
-                        "if": {"column_id": f"step{s+1}-Parameters", },
-                        "color": "black",
-                        "fontWeight": "bold",
-                        "backgroundColor": color,
-                        "backgroundOpacity": 0.5,
-                    }
-                ],
+def tuning_parameter_input(df_para):
+    return dbc.Row(
+        [
+
+            dbc.Col(
+                dcc.Dropdown(
+                    options=[{"label": p, "value": p}
+                             for p in df_para.iloc[:, 0]],
+                    multi=True,
+                    value=[p for p in df_para.iloc[:, 0]],
+                ),
+                width=8,
             ),
-            className="m-3",
+        ],
+        className="mt-3",
+    )
+
+
+def tuning_para_table(df_para):
+    return html.Div([
+        dbc.Row(
+            [
+                dbc.Label("Tuning Parameters:", className="ml-3"),
+            ],
+            className="mt-3",
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    dash_table.DataTable(
+                        columns=[
+                            {"name": c, "id": f"step{s+1}-{c}"} for c in df_para.columns[0:3]
+                        ],
+                        data=[
+                            {
+                                f"step{s+1}-Parameters": row[0],
+                                f"step{s+1}-Min": si_format(row[1], precision=2),
+                                f"step{s+1}-Max": si_format(row[2], precision=2),
+                            }
+                            for i, row in df_para.iterrows()
+                            if row[3] == s + 1
+                        ],
+                        editable=True,
+                        style_cell={"minWidth": 45,
+                                    "maxWidth": 45, "width": 45},
+                        style_data_conditional=[
+                            {
+                                "if": {"column_id": f"step{s+1}-Parameters", },
+                                "color": "black",
+                                "fontWeight": "bold",
+                                "backgroundColor": color,
+                                "backgroundOpacity": 0.5,
+                            }
+                        ],
+                    ),
+                    className="m-3",
+                )
+                for s, color in enumerate(["#fe9a9a", "#b8ecfe", "#aefec2", "#fef8ae"])
+            ]
         )
-        for s, color in enumerate(["#fe9a9a", "#b8ecfe", "#aefec2", "#fef8ae"])
-    ]
-)
+    ])
+
 
 measurement_upload = dbc.Row(
     [
@@ -304,8 +318,36 @@ measurement_upload = dbc.Row(
 )
 
 
+toast = html.Div(
+    [
+        dbc.Toast(
+            id="modeling-toast",
+            is_open=False,
+            dismissable=True,
+            duration=3000,
+            style={"position": "fixed", "top": 66, "right": 10, "width": 350},
+        ),
+    ]
+)
+
+modeling_button = dbc.Row(
+    dbc.Col(
+        dbc.Button(
+            "모델링 작업 생성",
+            id="create-modeling-btn",
+            color="primary",
+            outline=True,
+            block=True,
+        ),
+        width={"size": 4, "offset": 4},
+    )
+)
+
+
 def upload_page():
     username = request.authorization['username']
+    para_file = "./assets/para_config.csv"
+    df_para = pd.read_csv(para_file)
 
     page = dbc.Card(
         [
@@ -316,8 +358,10 @@ def upload_page():
                     html.P("모델링 정보를 입력해 주세요."),
                     html.Hr(),
                     modeling_inputs,
-                    tuning_para_table,
-                    measurement_upload
+                    tuning_para_table(df_para),
+                    measurement_upload,
+                    modeling_button,
+                    toast
                 ]
             )
         ]

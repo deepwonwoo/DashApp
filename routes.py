@@ -6,7 +6,8 @@ from dash.dependencies import Input, Output, State
 from flask import request
 
 from pages.upload.layouts import upload_page
-
+from pages.download.layouts import download_page
+from pages.optimize.layouts import optimize_page
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -76,9 +77,9 @@ def register_index_callbacks(app):
         if pathname in ["/", "/page-1"]:
             return upload_page()
         elif pathname == "/page-2":
-            return html.P("This is the content of page 2. Yay!")
+            return optimize_page()
         elif pathname == "/page-3":
-            return html.P("Oh cool, this is page 3!")
+            return download_page()
         # If the user tries to reach a different page, return a 404 message
         return dbc.Jumbotron(
             [
