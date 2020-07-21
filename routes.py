@@ -8,6 +8,8 @@ from flask import request
 from pages.upload.layouts import upload_page
 from pages.download.layouts import download_page
 from pages.optimize.layouts import optimize_page
+from pages.corner.layouts import corner_page
+
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -36,7 +38,6 @@ sidebar = html.Div(
         # only the first time the page is loaded
         # and keep it until it is cleared.
         dcc.Store(id="user-memory", storage_type="session"),
-
         html.H3("AlphaSPICE"),
         html.Hr(),
         html.P("AI기반 SPICE 모델링"),
@@ -45,6 +46,7 @@ sidebar = html.Div(
                 dbc.NavLink("1. 데이터 업로드", href="/page-1", id="page-1-link"),
                 dbc.NavLink("2. 모델링 최적화", href="/page-2", id="page-2-link"),
                 dbc.NavLink("3. 결과 다운로드", href="/page-3", id="page-3-link"),
+                dbc.NavLink("4. 산포 모델링", href="/page-4", id="page-4-link"),
             ],
             vertical=True,
             pills=True,
@@ -63,14 +65,14 @@ def register_index_callbacks(app):
     # corresponding nav link to true, allowing users to tell see page they are on
 
     @app.callback(
-        [Output(f"page-{i}-link", "active") for i in range(1, 4)],
+        [Output(f"page-{i}-link", "active") for i in range(1, 5)],
         [Input("url", "pathname")],
     )
     def toggle_active_links(pathname):
         if pathname == "/":
             # Treat page 1 as the homepage / index
             return True, False, False
-        return [pathname == f"/page-{i}" for i in range(1, 4)]
+        return [pathname == f"/page-{i}" for i in range(1, 5)]
 
     @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
     def render_page_content(pathname):
@@ -80,6 +82,9 @@ def register_index_callbacks(app):
             return optimize_page()
         elif pathname == "/page-3":
             return download_page()
+        elif pathname == "/page-4":
+            return corner_page()
+
         # If the user tries to reach a different page, return a 404 message
         return dbc.Jumbotron(
             [
